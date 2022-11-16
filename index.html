@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Saip Ardo Pratama" />
+
+<meta name="date" content="2022-11-15" />
+
+<title>Sepeda_Cyclistic</title>
+
+<script src="site_libs/header-attrs-2.17/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Sepeda_Cyclistic</h1>
+<h4 class="author">Saip Ardo Pratama</h4>
+<h4 class="date">2022-11-15</h4>
+
+</div>
+
+
+<div id="explanation" class="section level2">
+<h2>EXPLANATION</h2>
+<p>Data yang digunakan adalah data fiksi tentang sebuah perusahaan fiksi
+yang menawarkan akses berbayar terhadap penggunaan sepeda di stasiun
+tertentu. Data yang digunakan dapat didownload pada <a
+href="https://divvy-tripdata.s3.amazonaws.com/index.html">link</a>
+disediakan oleh Motivate International Inc dan dilisensi pada <a
+href="https://www.divvybikes.com/data-license-agreement">link</a></p>
+</div>
+<div id="libraries" class="section level2">
+<h2>LIBRARIES</h2>
+<pre class="r"><code>library(tidyverse)  #helps wrangle data</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(lubridate)  #helps wrangle date attributes</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;
+## 
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<pre class="r"><code>library(ggplot2)  #helps visualize data
+library(dplyr)
+library(&quot;hydroTSM&quot;)</code></pre>
+<pre><code>## Warning: package &#39;hydroTSM&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;
+## 
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric
+## 
+## Loading required package: xts</code></pre>
+<pre><code>## Warning: package &#39;xts&#39; was built under R version 4.2.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;xts&#39;
+## 
+## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     first, last
+## 
+## 
+## Attaching package: &#39;hydroTSM&#39;
+## 
+## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>library(&quot;lubridate&quot;)              # Load lubridate package</code></pre>
+</div>
+<div id="collect-data" class="section level2">
+<h2>COLLECT DATA</h2>
+<p>Data yang digrouping dimasukkan ke dalam RStudio Workspace</p>
+<pre class="r"><code>tripdata_202010 &lt;- read_csv(&quot;dataset/202010-divvy-tripdata.csv&quot;)
+tripdata_202011 &lt;- read_csv(&quot;dataset/202011-divvy-tripdata.csv&quot;)
+tripdata_202012 &lt;- read_csv(&quot;dataset/202012-divvy-tripdata.csv&quot;)
+tripdata_202101 &lt;- read_csv(&quot;dataset/202101-divvy-tripdata.csv&quot;)
+tripdata_202102 &lt;- read_csv(&quot;dataset/202102-divvy-tripdata.csv&quot;)
+tripdata_202103 &lt;- read_csv(&quot;dataset/202103-divvy-tripdata.csv&quot;)
+tripdata_202104 &lt;- read_csv(&quot;dataset/202104-divvy-tripdata.csv&quot;)
+tripdata_202105 &lt;- read_csv(&quot;dataset/202105-divvy-tripdata.csv&quot;)
+tripdata_202106 &lt;- read_csv(&quot;dataset/202106-divvy-tripdata.csv&quot;)
+tripdata_202107 &lt;- read_csv(&quot;dataset/202107-divvy-tripdata.csv&quot;)
+tripdata_202108 &lt;- read_csv(&quot;dataset/202108-divvy-tripdata.csv&quot;)
+tripdata_202109 &lt;- read_csv(&quot;dataset/202109-divvy-tripdata.csv&quot;)</code></pre>
+<p>Menggabungkan data Quarter menjadi 1 dataframe besar</p>
+<pre class="r"><code>all_trips &lt;-  rbind(tripdata_202010,
+                    tripdata_202011,
+                    tripdata_202012,
+                    tripdata_202101,
+                    tripdata_202102,
+                    tripdata_202103,
+                    tripdata_202104,
+                    tripdata_202105,
+                    tripdata_202106,
+                    tripdata_202107,
+                    tripdata_202108,
+                    tripdata_202109)</code></pre>
+<p>Mengecek data</p>
+<pre class="r"><code>glimpse(all_trips)</code></pre>
+<pre><code>## Rows: 5,136,261
+## Columns: 13
+## $ ride_id            &lt;chr&gt; &quot;ACB6B40CF5B9044C&quot;, &quot;DF450C72FD109C01&quot;, &quot;B6396B54A1…
+## $ rideable_type      &lt;chr&gt; &quot;electric_bike&quot;, &quot;electric_bike&quot;, &quot;electric_bike&quot;, …
+## $ started_at         &lt;dttm&gt; 2020-10-31 19:39:43, 2020-10-31 23:50:08, 2020-10-…
+## $ ended_at           &lt;dttm&gt; 2020-10-31 19:57:12, 2020-11-01 00:04:16, 2020-10-…
+## $ start_station_name &lt;chr&gt; &quot;Lakeview Ave &amp; Fullerton Pkwy&quot;, &quot;Southport Ave &amp; W…
+## $ start_station_id   &lt;chr&gt; &quot;313&quot;, &quot;227&quot;, &quot;102&quot;, &quot;165&quot;, &quot;190&quot;, &quot;359&quot;, &quot;313&quot;, &quot;1…
+## $ end_station_name   &lt;chr&gt; &quot;Rush St &amp; Hubbard St&quot;, &quot;Kedzie Ave &amp; Milwaukee Ave…
+## $ end_station_id     &lt;chr&gt; &quot;125&quot;, &quot;260&quot;, &quot;423&quot;, &quot;256&quot;, &quot;185&quot;, &quot;53&quot;, &quot;125&quot;, &quot;31…
+## $ start_lat          &lt;dbl&gt; 41.92610, 41.94817, 41.77346, 41.95085, 41.92886, 4…
+## $ start_lng          &lt;dbl&gt; -87.63898, -87.66391, -87.58537, -87.65924, -87.663…
+## $ end_lat            &lt;dbl&gt; 41.89035, 41.92953, 41.79145, 41.95281, 41.91778, 4…
+## $ end_lng            &lt;dbl&gt; -87.62607, -87.70782, -87.60005, -87.65010, -87.691…
+## $ member_casual      &lt;chr&gt; &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;…</code></pre>
+</div>
+<div id="data-cleaning-and-preparation" class="section level2">
+<h2>DATA CLEANING and PREPARATION</h2>
+<p>Membersihkan data null dan disimpan dalam dataframe baru</p>
+<pre class="r"><code>colSums(is.na(all_trips))</code></pre>
+<pre><code>##            ride_id      rideable_type         started_at           ended_at 
+##                  0                  0                  0                  0 
+## start_station_name   start_station_id   end_station_name     end_station_id 
+##             523467             523781             567268             567501 
+##          start_lat          start_lng            end_lat            end_lng 
+##                  0                  0               4821               4821 
+##      member_casual 
+##                  0</code></pre>
+<pre class="r"><code>all_trips2 &lt;- all_trips[complete.cases(all_trips), ]</code></pre>
+<p>Menghapus data yang salah yaitu started_at melebihi ended_at</p>
+<pre class="r"><code>all_trips2 &lt;- all_trips2 %&gt;% 
+  filter(all_trips2$started_at &lt; all_trips2$ended_at)</code></pre>
+<p>Membuat kolom date, month, day, year, day_of_week, hours, seasons</p>
+<pre class="r"><code>all_trips2$date &lt;- as.Date(all_trips2$started_at) #The default format is yyyy-mm-dd
+all_trips2$month &lt;- format(as.Date(all_trips2$date), &quot;%m&quot;)
+all_trips2$day &lt;- format(as.Date(all_trips2$date), &quot;%d&quot;)
+all_trips2$year &lt;- format(as.Date(all_trips2$date), &quot;%Y&quot;)
+all_trips2$day_of_week &lt;- format(as.Date(all_trips2$date), &quot;%A&quot;)
+all_trips2$hours &lt;- hour(all_trips2$started_at)
+all_trips2$seasons &lt;- time2season(all_trips2$date,                # Convert dates to seasons
+                          out.fmt = &quot;seasons&quot;)</code></pre>
+<p>Mengecek dataframe</p>
+<pre class="r"><code>glimpse(all_trips2)</code></pre>
+<pre><code>## Rows: 4,350,732
+## Columns: 20
+## $ ride_id            &lt;chr&gt; &quot;ACB6B40CF5B9044C&quot;, &quot;DF450C72FD109C01&quot;, &quot;B6396B54A1…
+## $ rideable_type      &lt;chr&gt; &quot;electric_bike&quot;, &quot;electric_bike&quot;, &quot;electric_bike&quot;, …
+## $ started_at         &lt;dttm&gt; 2020-10-31 19:39:43, 2020-10-31 23:50:08, 2020-10-…
+## $ ended_at           &lt;dttm&gt; 2020-10-31 19:57:12, 2020-11-01 00:04:16, 2020-10-…
+## $ start_station_name &lt;chr&gt; &quot;Lakeview Ave &amp; Fullerton Pkwy&quot;, &quot;Southport Ave &amp; W…
+## $ start_station_id   &lt;chr&gt; &quot;313&quot;, &quot;227&quot;, &quot;102&quot;, &quot;165&quot;, &quot;190&quot;, &quot;359&quot;, &quot;313&quot;, &quot;1…
+## $ end_station_name   &lt;chr&gt; &quot;Rush St &amp; Hubbard St&quot;, &quot;Kedzie Ave &amp; Milwaukee Ave…
+## $ end_station_id     &lt;chr&gt; &quot;125&quot;, &quot;260&quot;, &quot;423&quot;, &quot;256&quot;, &quot;185&quot;, &quot;53&quot;, &quot;125&quot;, &quot;31…
+## $ start_lat          &lt;dbl&gt; 41.92610, 41.94817, 41.77346, 41.95085, 41.92886, 4…
+## $ start_lng          &lt;dbl&gt; -87.63898, -87.66391, -87.58537, -87.65924, -87.663…
+## $ end_lat            &lt;dbl&gt; 41.89035, 41.92953, 41.79145, 41.95281, 41.91778, 4…
+## $ end_lng            &lt;dbl&gt; -87.62607, -87.70782, -87.60005, -87.65010, -87.691…
+## $ member_casual      &lt;chr&gt; &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;casual&quot;, &quot;…
+## $ date               &lt;date&gt; 2020-10-31, 2020-10-31, 2020-10-31, 2020-10-31, 20…
+## $ month              &lt;chr&gt; &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10&quot;, &quot;10…
+## $ day                &lt;chr&gt; &quot;31&quot;, &quot;31&quot;, &quot;31&quot;, &quot;31&quot;, &quot;31&quot;, &quot;29&quot;, &quot;29&quot;, &quot;29&quot;, &quot;29…
+## $ year               &lt;chr&gt; &quot;2020&quot;, &quot;2020&quot;, &quot;2020&quot;, &quot;2020&quot;, &quot;2020&quot;, &quot;2020&quot;, &quot;20…
+## $ day_of_week        &lt;chr&gt; &quot;Saturday&quot;, &quot;Saturday&quot;, &quot;Saturday&quot;, &quot;Saturday&quot;, &quot;Sa…
+## $ hours              &lt;int&gt; 19, 23, 23, 22, 19, 17, 9, 16, 16, 21, 18, 12, 8, 2…
+## $ seasons            &lt;chr&gt; &quot;autumm&quot;, &quot;autumm&quot;, &quot;autumm&quot;, &quot;autumm&quot;, &quot;autumm&quot;, &quot;…</code></pre>
+<p>Terdapat kesalahan dalam day of week yaitu harinya 6</p>
+<pre class="r"><code>all_trips2$day_of_week &lt;- ordered(all_trips2$day_of_week, levels=c(&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;))</code></pre>
+<p>Menambah kolom “ride_length” yang berisi durasi pemakaian sepeda</p>
+<pre class="r"><code>all_trips2$ride_length &lt;- difftime(all_trips2$ended_at,all_trips2$started_at)
+all_trips2$ride_length &lt;- as.numeric(as.character(all_trips2$ride_length))</code></pre>
+</div>
+<div id="cleaning-data-2" class="section level2">
+<h2>CLEANING DATA 2</h2>
+<p>Membersihkan kembali data yang telah ditambah kolom baru, yaitu
+menghapus data yang memiliki “ride_length” negatif</p>
+<pre class="r"><code>all_trips2 &lt;- all_trips2[!(all_trips2$start_station_name == &quot;HQ QR&quot; | all_trips2$ride_length&lt;0),]</code></pre>
+</div>
+<div id="analysis" class="section level2">
+<h2>ANALYSIS</h2>
+<p>Deskriptif analysis durasi pemakaian (“ride_length”)</p>
+<pre class="r"><code>summary(all_trips2$ride_length)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##       1     433     762    1359    1379 3356649</code></pre>
+<p>Membandingkan membership dan durasi</p>
+<pre class="r"><code>aggregate(all_trips2$ride_length ~ all_trips2$member_casual, FUN = mean)</code></pre>
+<pre><code>##   all_trips2$member_casual all_trips2$ride_length
+## 1                   casual              2012.3765
+## 2                   member               821.9262</code></pre>
+<pre class="r"><code>aggregate(all_trips2$ride_length ~ all_trips2$member_casual, FUN = sum)</code></pre>
+<pre><code>##   all_trips2$member_casual all_trips2$ride_length
+## 1                   casual             3951922997
+## 2                   member             1961874662</code></pre>
+<p>Membandingkan membership, durasi dan day</p>
+<pre class="r"><code>aggregate(all_trips2$ride_length ~ all_trips2$member_casual + all_trips2$day_of_week, FUN = mean)</code></pre>
+<pre><code>##    all_trips2$member_casual all_trips2$day_of_week all_trips2$ride_length
+## 1                    casual                 Sunday              2322.5672
+## 2                    member                 Sunday               936.1720
+## 3                    casual                 Monday              1992.7622
+## 4                    member                 Monday               787.7697
+## 5                    casual                Tuesday              1802.6559
+## 6                    member                Tuesday               775.0020
+## 7                    casual              Wednesday              1752.4906
+## 8                    member              Wednesday               777.9496
+## 9                    casual               Thursday              1723.6577
+## 10                   member               Thursday               771.2929
+## 11                   casual                 Friday              1931.6675
+## 12                   member                 Friday               808.9091
+## 13                   casual               Saturday              2167.0959
+## 14                   member               Saturday               917.5835</code></pre>
+<p>Perbandingan membership</p>
+<pre class="r"><code>all_trips2 %&gt;%
+  group_by(member_casual) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()) %&gt;%
+  arrange(member_casual)                                # sorts</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   member_casual number_of_rides
+##   &lt;chr&gt;                   &lt;int&gt;
+## 1 casual                1963809
+## 2 member                2386923</code></pre>
+<p>Perbandingan membership dan musim</p>
+<pre class="r"><code>all_trips2 %&gt;%
+  group_by(seasons) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()
+            ,member_casual) %&gt;%         # calculates the average duration
+  arrange(seasons)                              # sorts</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;seasons&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 4,350,732 × 3
+## # Groups:   seasons [4]
+##    seasons number_of_rides member_casual
+##    &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;        
+##  1 autumm          1180394 casual       
+##  2 autumm          1180394 casual       
+##  3 autumm          1180394 casual       
+##  4 autumm          1180394 casual       
+##  5 autumm          1180394 casual       
+##  6 autumm          1180394 casual       
+##  7 autumm          1180394 casual       
+##  8 autumm          1180394 casual       
+##  9 autumm          1180394 casual       
+## 10 autumm          1180394 casual       
+## # … with 4,350,722 more rows</code></pre>
+<p>Perbandingan membership dan bulan</p>
+<pre class="r"><code>all_trips2 %&gt;%
+  group_by(member_casual, month) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()) %&gt;%      # calculates the average duration
+  arrange(member_casual, month)                     # sorts</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 24 × 3
+## # Groups:   member_casual [2]
+##    member_casual month number_of_rides
+##    &lt;chr&gt;         &lt;chr&gt;           &lt;int&gt;
+##  1 casual        01              14690
+##  2 casual        02               8613
+##  3 casual        03              75641
+##  4 casual        04             120418
+##  5 casual        05             216823
+##  6 casual        06             304184
+##  7 casual        07             369401
+##  8 casual        08             341463
+##  9 casual        09             292920
+## 10 casual        10             122317
+## # … with 14 more rows</code></pre>
+<p>Perbandingan membership dan hari</p>
+<pre class="r"><code>all_trips2 %&gt;%
+  group_by(member_casual, day_of_week) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()) %&gt;%      # calculates the average duration
+  arrange(member_casual, day_of_week)                               # sorts</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 14 × 3
+## # Groups:   member_casual [2]
+##    member_casual day_of_week number_of_rides
+##    &lt;chr&gt;         &lt;ord&gt;                 &lt;int&gt;
+##  1 casual        Sunday               381824
+##  2 casual        Monday               219104
+##  3 casual        Tuesday              203610
+##  4 casual        Wednesday            208587
+##  5 casual        Thursday             222581
+##  6 casual        Friday               278722
+##  7 casual        Saturday             449381
+##  8 member        Sunday               295641
+##  9 member        Monday               324047
+## 10 member        Tuesday              351332
+## 11 member        Wednesday            366051
+## 12 member        Thursday             362053
+## 13 member        Friday               345847
+## 14 member        Saturday             341952</code></pre>
+<p>Perbandingan membership dan jam</p>
+<pre class="r"><code>all_trips2 %&gt;%
+  group_by(hours) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()) %&gt;%      # calculates the average duration
+  arrange(hours)                    # sorts</code></pre>
+<pre><code>## # A tibble: 24 × 2
+##    hours number_of_rides
+##    &lt;int&gt;           &lt;int&gt;
+##  1     0           61062
+##  2     1           41979
+##  3     2           25175
+##  4     3           13522
+##  5     4           11635
+##  6     5           30901
+##  7     6           85372
+##  8     7          152934
+##  9     8          178753
+## 10     9          157290
+## # … with 14 more rows</code></pre>
+<p>Perbandingan membership, day, durasi</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;%  #creates weekday field using wday()
+  group_by(member_casual, weekday) %&gt;%  #groups by usertype and weekday
+  summarise(number_of_rides = n()                           #calculates the number of rides and average duration 
+            ,average_duration = mean(ride_length)
+            ,sum_duration = sum(ride_length)) %&gt;%       # calculates the average duration
+  arrange(member_casual, weekday)                               # sorts</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 14 × 5
+## # Groups:   member_casual [2]
+##    member_casual weekday number_of_rides average_duration sum_duration
+##    &lt;chr&gt;         &lt;ord&gt;             &lt;int&gt;            &lt;dbl&gt;        &lt;dbl&gt;
+##  1 casual        Sun              381824            2323.    886811881
+##  2 casual        Mon              219104            1993.    436622179
+##  3 casual        Tue              203610            1803.    367038773
+##  4 casual        Wed              208587            1752.    365546747
+##  5 casual        Thu              222581            1724.    383653462
+##  6 casual        Fri              278722            1932.    538398216
+##  7 casual        Sat              449381            2167.    973851739
+##  8 member        Sun              295641             936.    276770826
+##  9 member        Mon              324047             788.    255274402
+## 10 member        Tue              351332             775.    272283010
+## 11 member        Wed              366051             778.    284769220
+## 12 member        Thu              362053             771.    279248895
+## 13 member        Fri              345847             809.    279758800
+## 14 member        Sat              341952             918.    313769509</code></pre>
+<p>Visualisasi 1 jumlah_member_casual</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  group_by(member_casual) %&gt;% 
+  summarise(number_of_rides = n()) %&gt;% 
+  arrange(member_casual)  %&gt;% 
+  ggplot(aes(x = member_casual, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Visualisasi 2 avg_durasi_member_casual</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  group_by(member_casual) %&gt;% 
+  summarise(average_duration = mean(ride_length)) %&gt;% 
+  arrange(member_casual)  %&gt;% 
+  ggplot(aes(x = member_casual, y = average_duration, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Visualisasi 3 jumlah_rideable_type</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  group_by(rideable_type) %&gt;% 
+  summarise(number_of_rides = n()) %&gt;% 
+  arrange(rideable_type)  %&gt;% 
+  ggplot(aes(x = rideable_type, y = number_of_rides, fill = rideable_type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>Visualisasi 4 avg_durasi_rideable_type</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  group_by(rideable_type) %&gt;% 
+  summarise(average_duration = mean(ride_length)) %&gt;% 
+  arrange(rideable_type)  %&gt;% 
+  ggplot(aes(x = rideable_type, y = average_duration, fill = rideable_type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Visualisasi 5 sum_durasi_rideable_type</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  group_by(rideable_type) %&gt;% 
+  summarise(sum_duration = sum(ride_length)) %&gt;% 
+  arrange(rideable_type)  %&gt;% 
+  ggplot(aes(x = rideable_type, y = sum_duration, fill = rideable_type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>Visualisasi 6 number_of_rides_by_member_casual_weekday</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(member_casual, weekday) %&gt;% 
+  summarise(number_of_rides = n()) %&gt;% 
+  arrange(member_casual, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Visualisasi 7 average_duration_by_member_casual_weekday</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(member_casual, weekday) %&gt;% 
+  summarise(average_duration = mean(ride_length)) %&gt;% 
+  arrange(member_casual, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;member_casual&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Visualisasi 8</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(rideable_type, weekday) %&gt;% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)
+            ,sum_duration = sum(ride_length)) %&gt;% 
+  arrange(rideable_type, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = rideable_type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;rideable_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Visualisasi 9</p>
+<pre class="r"><code>all_trips2 %&gt;% 
+  mutate(weekday = wday(started_at, label = TRUE)) %&gt;% 
+  group_by(rideable_type, weekday) %&gt;% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %&gt;% 
+  arrange(rideable_type, weekday)  %&gt;% 
+  ggplot(aes(x = weekday, y = average_duration, fill = rideable_type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;rideable_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="save-to-excel" class="section level2">
+<h2>SAVE TO EXCEL</h2>
+<p>write.csv2(all_trips2, file = ‘Divvy_Trips_Gabungan_Final_1.csv’)</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
